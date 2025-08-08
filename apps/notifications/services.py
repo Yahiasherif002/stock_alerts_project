@@ -101,7 +101,7 @@ Stock Alert System
             
             logger.info(f"🚨 STOCK ALERT TRIGGERED: {alert_info}")
             
-            # Also print to console for visibility during development
+            
             print(f"\n{'='*50}")
             print(f"🚨 STOCK ALERT TRIGGERED")
             print(f"{'='*50}")
@@ -128,9 +128,9 @@ Stock Alert System
         try:
             subject = "Stock Alert System - Test Email"
             message = """
-This is a test email from your Stock Alert System.
+This is a test email from  Stock Alert System.
 
-If you received this email, your email configuration is working correctly!
+ Email configuration is working correctly!
 
 Test Details:
 - Sent At: {}

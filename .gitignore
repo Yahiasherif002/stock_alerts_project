@@ -11,6 +11,8 @@ env/
 # Environment variables
 .env
 
+staticfiles/
+
 # Django stuff
 *.log
 db.sqlite3

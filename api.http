@@ -1,0 +1,9 @@
+POST http://localhost:8000/api/users/ Http/1.1
+Content-Type: application/json
+
+{
+    "username": "testuser2",
+    "email": "test2@example.com", 
+    "password": "strongpassword123",
+    "password_confirm": "strongpassword123"
+  }

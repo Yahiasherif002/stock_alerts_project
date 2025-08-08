@@ -60,6 +60,7 @@ INSTALLED_APPS = [
     'apps.authentication',
     'apps.stocks',
     'apps.notifications',
+    'drf_spectacular'
     
 ]
 
@@ -159,7 +160,18 @@ REST_FRAMEWORK = {
     'DEFAULT_RENDERER_CLASSES': [
         'rest_framework.renderers.JSONRenderer',
     ],
-    'PAGE_SIZE': 20
+    'PAGE_SIZE': 20,
+    
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema'
+
+}
+
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Stock Alerts API',
+    'DESCRIPTION': 'API documentation for the Stock Alerts system',
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': False,
 }
 
 # Simple JWT

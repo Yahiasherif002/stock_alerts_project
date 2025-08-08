@@ -18,8 +18,7 @@ class StockDataService:
         self.session = requests.Session()
         self.api_priority = [
         "fetch_price_twelvedata",
-        "fetch_price_fmp",
-        "fetch_price_alphavantage"
+        "fetch_price_fmp"
         ]
 
         self.twelve_data_key = settings.TWELVE_DATA_API_KEY 
@@ -77,33 +76,6 @@ class StockDataService:
             logger.error(f"FMP request failed for {symbol}: {e}")
         return None
 
-
-
-    # def fetch_price_alphavantage(self, symbol: str) -> Optional[Dict]:
-    #     """Fetch stock price from Alpha Vantage"""
-    #     try:
-    #         url = "https://www.alphavantage.co/query"
-    #         params = {
-    #             "function": "GLOBAL_QUOTE",
-    #             "symbol": symbol,
-    #             "apikey": self.api_key
-    #         }
-    #         response = self.session.get(url, params=params, timeout=10)
-    #         response.raise_for_status()
-    #         data = response.json()
-
-    #         if "Global Quote" in data:
-    #             quote = data["Global Quote"]
-    #             if "05. price" in quote:
-    #                 return {
-    #                     "symbol": symbol,
-    #                     "price": Decimal(str(quote["05. price"])),
-    #                     "source": "AlphaVantage"
-    #                 }
-
-    #     except Exception as e:
-    #         logger.error(f"AlphaVantage request failed for {symbol}: {e}")
-    #     return None
 
     # ------------------------------
     # Failover logic

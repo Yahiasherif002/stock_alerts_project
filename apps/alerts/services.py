@@ -68,7 +68,6 @@ class AlertProcessor:
         Trigger an alert and send notification
         """
         try:
-            # Create triggered alert record
             triggered_alert = TriggeredAlert.objects.create(
                 alert=alert,
                 stock_price=current_price,
