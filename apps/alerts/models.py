@@ -64,6 +64,7 @@ class Alert(models.Model):
             return current_price <= self.threshold_price
         return False
     
+    
     def should_trigger(self, current_price):
         """
         Determine if alert should be triggered based on type and duration
