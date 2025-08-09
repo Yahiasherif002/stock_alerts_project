@@ -6,57 +6,54 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 from django.contrib.auth.models import User
 from .serializers import UserRegistrationSerializer, UserSerializer
 from drf_spectacular.utils import extend_schema
+from rest_framework import generics, permissions, status
+from rest_framework.response import Response
+from .serializers import UserRegistrationSerializer
+
 
 @extend_schema(tags=['Users'])
 class UserViewSet(viewsets.GenericViewSet,
-                  mixins.CreateModelMixin,
                   mixins.RetrieveModelMixin,
                   mixins.UpdateModelMixin):
-    """
-    User ViewSet - Handles registration, profile retrieval/update.
-    """
     queryset = User.objects.all()
 
     def get_permissions(self):
-        if self.action == 'create' or self.action == 'login':
-            return [AllowAny()]
+        
         return [IsAuthenticated()]
 
     def get_serializer_class(self):
-        if self.action == 'create':
-            return UserRegistrationSerializer
-        return UserSerializer
+        return UserSerializer  
+
+    @action(detail=False, methods=['get'])
+    def profile(self, request):
+        serializer = self.get_serializer(request.user)
+        return Response(serializer.data)
+
+    @action(detail=False, methods=['put', 'patch'])
+    def update_profile(self, request):
+        serializer = self.get_serializer(request.user, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)
+
+class RegisterAPIView(generics.CreateAPIView):
+    serializer_class = UserRegistrationSerializer
+    permission_classes = [permissions.AllowAny]
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         user = serializer.save()
         return Response({
-            'message': 'User created successfully',
+            'message': 'User registered successfully',
             'user': {
                 'id': user.id,
                 'username': user.username,
                 'email': user.email
             }
-        }, status=status.HTTP_201_CREATED)
-
-    @action(detail=False, methods=['get'])
-    def profile(self, request):
-        """Get user profile"""
-        serializer = self.get_serializer(request.user)
-        return Response(serializer.data)
-
-    @action(detail=False, methods=['put', 'patch'])
-    def update_profile(self, request):
-        """Update user profile"""
-        serializer = self.get_serializer(
-            request.user, data=request.data, partial=True
-        )
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return Response(serializer.data)
-
-
+        }, status=status.HTTP_201_CREATED) 
+ 
+                 
 class CustomTokenObtainPairView(TokenObtainPairView):
     """Custom login view with additional user info"""
     

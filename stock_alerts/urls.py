@@ -1,13 +1,14 @@
 from django.contrib import admin
 from django.urls import path, include
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView, SpectacularRedocView
-from apps.authentication.views import CustomTokenObtainPairView
+from apps.authentication.views import CustomTokenObtainPairView, RegisterAPIView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
 
     # JWT login
-    path('auth/login/', CustomTokenObtainPairView.as_view(), name='token_obtain_pair'),
+     path('api/auth/login/', CustomTokenObtainPairView.as_view(), name='token_obtain_pair'),
+     path('api/auth/register/', RegisterAPIView.as_view(), name='register'),
 
     # App routes with namespaces
     path('api/stocks/', include(('apps.stocks.urls', 'stocks'), namespace='stocks')),
