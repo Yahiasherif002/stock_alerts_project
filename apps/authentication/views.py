@@ -69,3 +69,11 @@ class CustomTokenObtainPairView(TokenObtainPairView):
                 'last_name': user.last_name
             }
         return response
+
+class ProfileAPIView(generics.RetrieveAPIView):
+    """View to get user profile details"""
+    serializer_class = UserSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_object(self):
+        return self.request.user
