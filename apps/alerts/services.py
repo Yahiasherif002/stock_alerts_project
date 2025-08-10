@@ -174,3 +174,19 @@ class AlertProcessor:
         
         logger.info(f"Cleaned up {deleted_count} old triggered alert records")
         return deleted_count
+
+    def get_all_triggered_alerts_summary(self) -> Dict:
+        """
+        Get a summary of all triggered alerts
+        """
+        triggered_alerts = self.get_all_triggered_alerts()
+        return {
+            'total_triggered_alerts': len(triggered_alerts),
+            'triggered_alerts': [alert.id for alert in triggered_alerts]
+        }
+
+    def get_all_triggered_alerts(self) -> List[TriggeredAlert]:
+        """
+        Get all triggered alerts
+        """
+        return list(TriggeredAlert.objects.all().select_related('alert'))

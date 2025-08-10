@@ -6,19 +6,17 @@ from apps.authentication.views import CustomTokenObtainPairView, RegisterAPIView
 urlpatterns = [
     path('admin/', admin.site.urls),
 
-    # JWT login
-     path('api/auth/login/', CustomTokenObtainPairView.as_view(), name='token_obtain_pair'),
-     path('api/auth/register/', RegisterAPIView.as_view(), name='register'),
+    # JWT Auth
+    path('api/auth/login/', CustomTokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('api/auth/register/', RegisterAPIView.as_view(), name='register'),
 
-    # App routes with namespaces
-    path('api/stocks/', include(('apps.stocks.urls', 'stocks'), namespace='stocks')),
+    # App URLs with namespaces and prefixes
     path('api/alerts/', include(('apps.alerts.urls', 'alerts'), namespace='alerts')),
-    path('api/users/', include(('apps.authentication.urls', 'users'), namespace='users')),
+    path('api/', include(('apps.authentication.urls', 'authentication'), namespace='authentication')),
+    path('api/', include(('apps.stocks.urls', 'stocks'), namespace='stocks')),
 
-    # Schema generation endpoint
+    # OpenAPI schema & docs
     path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
-
-    # Swagger & Redoc
     path('api/docs/swagger/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
     path('api/docs/redoc/', SpectacularRedocView.as_view(url_name='schema'), name='redoc'),
 ]

@@ -60,8 +60,9 @@ INSTALLED_APPS = [
     'apps.authentication',
     'apps.stocks',
     'apps.notifications',
-    'drf_spectacular'
-    
+    'drf_spectacular',
+    'django.contrib.humanize',
+
 ]
 
 MIDDLEWARE = [
@@ -130,7 +131,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Africa/Cairo'
 
 USE_I18N = True
 
@@ -152,16 +153,18 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # Django REST Framework
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.SessionAuthentication', 
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
     'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.IsAuthenticated',
+        'rest_framework.permissions.AllowAny',
     ],
     'DEFAULT_RENDERER_CLASSES': [
         'rest_framework.renderers.JSONRenderer',
+       'rest_framework.renderers.BrowsableAPIRenderer'
     ],
-    'PAGE_SIZE': 20,
-    
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 10, 
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema'
 
 }
@@ -194,7 +197,7 @@ DEFAULT_FROM_EMAIL = os.getenv("DEFAULT_FROM_EMAIL", EMAIL_HOST_USER)
 STOCK_API_KEY = config('STOCK_API_KEY', default='')
 STOCK_API_BASE_URL = config('STOCK_API_BASE_URL', default='https://api.twelvedata.com')
 
-# Celery Configuration (we'll set this up later)
+# Celery Configuration
 CELERY_BROKER_URL = config('REDIS_URL', default='redis://localhost:6379')
 CELERY_RESULT_BACKEND = config('REDIS_URL', default='redis://localhost:6379')
 

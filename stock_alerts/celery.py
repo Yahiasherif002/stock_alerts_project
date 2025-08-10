@@ -12,12 +12,14 @@ app.config_from_object('django.conf:settings', namespace='CELERY')
 # Discover tasks from all registered Django apps
 app.autodiscover_tasks()
 
-# Celery Beat schedule for periodic tasks
+broker_connection_retry_on_startup = True
+
+
 app.conf.beat_schedule = {
-    # Fetch stock prices every 5 minutes
+    # Fetch stock prices every 3 minutes
     'fetch-stock-prices': {
         'task': 'apps.stocks.tasks.fetch_all_stock_prices',
-        'schedule': 300.0,  # 5 minutes
+        'schedule': 180.0,  # 3 minutes
     },
     # Process alerts every 2 minutes
     'process-alerts': {
@@ -28,7 +30,7 @@ app.conf.beat_schedule = {
     'cleanup-old-alerts': {
         'task': 'apps.alerts.tasks.cleanup_old_triggered_alerts',
         'schedule': 86400.0,  # 24 hours
-        'options': {'countdown': 0}  # Run immediately when scheduled
+        'options': {'countdown': 0}  
     },
 }
 

@@ -11,7 +11,7 @@ from .serializers import (
 from .services import AlertProcessor
 from drf_spectacular.utils import extend_schema
 
-@extend_schema(tags=['Alerts'])
+@extend_schema(tags=['Alerts'], description=("Manage stock alerts including creating, updating, and processing alerts."))
 class AlertViewSet(viewsets.ModelViewSet):
     """
     ViewSet for managing stock alerts
@@ -36,6 +36,7 @@ class AlertViewSet(viewsets.ModelViewSet):
         
         
     
+    @extend_schema(description=("Create a new stock alert"))
     @action(detail=False, methods=['post'])
     def test_process_alerts(self, request):
         """
@@ -49,13 +50,13 @@ class AlertViewSet(viewsets.ModelViewSet):
             'results': results
         })
     
-    @action(detail=False, methods=['get'])
+    @action(detail=False, methods=['get'], url_path='triggered')
     def triggered_alerts(self, request):
         """
         Endpoint to get all triggered alerts for the authenticated user
         """
         processor = AlertProcessor()
-        summary = processor.get_triggered_alert_summary(request.user)
+        summary = processor.get_user_alerts_summary(request.user)
         return Response({
             'status': 'success',
             'summary': summary
@@ -63,14 +64,35 @@ class AlertViewSet(viewsets.ModelViewSet):
 
 
 @extend_schema(tags=['Triggered Alerts'])
-class TriggeredAlertViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
+class TriggeredAlertViewSet(viewsets.ReadOnlyModelViewSet):
     """
-    Triggered Alerts - Read-only list of triggered alerts.
+    ViewSet for managing triggered alerts
     """
     serializer_class = TriggeredAlertSerializer
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        return TriggeredAlert.objects.filter(
-            alert__user=self.request.user
-        ).order_by('-triggered_at')
+        # admins can see all triggered alerts, users can only see their own
+        if self.request.user.is_staff:
+            return TriggeredAlert.objects.all().order_by('-triggered_at')
+        else:
+            return TriggeredAlert.objects.filter(
+                alert__user=self.request.user
+            ).order_by('-triggered_at')
+
+    @extend_schema(description=("Get a summary of triggered alerts for the authenticated user"))
+    @action(detail=False, methods=['get'], url_path='summary')
+    def summary(self, request):
+        """
+        Endpoint to get a summary of triggered alerts
+        """
+        processor = AlertProcessor()
+        if request.user.is_staff:
+            summary = processor.get_all_triggered_alerts_summary()
+        else:
+            summary = processor.get_user_alerts_summary(request.user)
+
+        return Response({
+            'status': 'success',
+            'summary': summary
+        })

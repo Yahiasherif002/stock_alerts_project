@@ -25,3 +25,40 @@ media/
 # OS-specific files
 .DS_Store
 Thumbs.db
+
+# Python bytecode files
+*.pyc
+*.pyo
+
+api.http
+# Test coverage reports
+.coverage
+
+# Pytest cache
+.cache
+# Pytest configuration
+pytest.ini
+# Django migrations
+migrations/
+# Ignore migrations
+# Ignore migrations in apps
+apps/*/migrations/
+# Ignore specific migrations
+apps/stocks/migrations/0001_initial.py
+# Ignore specific migrations in alerts
+apps/alerts/migrations/0001_initial.py
+# Ignore specific migrations in users
+apps/users/migrations/0001_initial.py
+# Ignore specific migrations in stocks
+apps/stocks/migrations/0002_auto_20231001_1234.py
+# Ignore specific migrations in alerts
+apps/alerts/migrations/0002_auto_20231001_1234.py
+# Ignore specific migrations in users
+apps/users/migrations/0002_auto_20231001_1234.py
+# Ignore specific migrations in stocks
+apps/stocks/migrations/0003_auto_20231001_1234.py
+# Ignore specific migrations in alerts
+apps/alerts/migrations/0003_auto_20231001_1234.py
+# Ignore specific migrations in users
+apps/users/migrations/0003_auto_20231001_1234.py
+# Ignore specific migrations in stocks

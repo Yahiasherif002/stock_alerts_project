@@ -10,7 +10,7 @@ def fetch_all_stock_prices():
     """Fetch all stock prices from the database.
     """
     service = StockDataService()
-    result = service.fetch_all_stock_prices()
+    result = service.update_all_active_stocks()
     logger.info("Fetched all stock prices successfully.")
     return result
 
