@@ -11,7 +11,21 @@ A comprehensive Django-based stock price monitoring and alerting system that all
 - **Multiple Notification Methods**: Email notifications with console fallback  
 - **RESTful API**: Complete JWT-based API for frontend integration  
 - **Background Processing**: Automated price fetching and alert checking  
-- **AWS Deployment**: Ready for production deployment on AWS Free Tier  
+- **AWS Deployment**: Ready for production deployment on AWS Free Tier
+
+## 🏗️ Architecture
+
+```
+┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
+│   Load Balancer │    │   Django API    │    │   Celery Worker │
+│    (AWS ALB)    │────│                 │────│  (Background)   │
+└─────────────────┘    └─────────────────┘    └─────────────────┘
+                                │                       │
+                        ┌───────┴───────┐       ┌───────┴───────┐
+                        │     SQLITE    │       │     Redis     │
+                        │  (Database)   │       │ (Cache/Queue) │
+                        └───────────────┘       └───────────────┘
+```
 
 ## 🛠️ Tech Stack
 
@@ -157,6 +171,40 @@ curl -X POST http://localhost:8000/api/alerts/   -H "Authorization: Bearer YOUR_
     "duration_minutes": 30
   }'
 ```
+
+### Environment Variables
+
+| Variable | Description | Default |
+|----------|-------------|---------|
+| `DJANGO_SECRET_KEY` | Django secret key | - |
+| `DATABASE_URL` | PostgreSQL connection string | - |
+| `REDIS_URL` | Redis connection string | `redis://localhost:6379/0` |
+| `TWELVE_DATA_API_KEY` | Twelve Data API key | - |
+| `FMP_API_KEY` | Financial Modeling Prep API key | - |
+| `EMAIL_HOST_USER` | SMTP email username | - |
+| `EMAIL_HOST_PASSWORD` | SMTP email password | - |
+
+### Stock API Keys
+
+1. **Twelve Data** (Primary)
+   - Sign up at [twelvedata.com](https://twelvedata.com)
+   - Free tier: 800 requests/day
+   - Add `TWELVE_DATA_API_KEY` to `.env`
+
+2. **Financial Modeling Prep** (Fallback)
+   - Sign up at [financialmodelingprep.com](https://financialmodelingprep.com)
+   - Free tier: 250 requests/day
+   - Add `FMP_API_KEY` to `.env`
+
+
+**🔒 Security Considerations**
+
+- **API Rate Limiting**: 1000 requests/hour per user
+- **JWT Token Expiry**: 1-hour access tokens, 7-day refresh
+- **Database Security**: Connection pooling, prepared statements
+- **CORS Policy**: Configured for production domains
+- **SSL/TLS**: Required in production
+- **Environment Variables**: Never commit sensitive data
 
 ## 🧪 Testing
 
