@@ -50,3 +50,17 @@ services:
     env_file:
       - .env
     restart: always
+  
+  db:
+    image: postgres:15-alpine
+    container_name: postgres_db
+    environment:
+      POSTGRES_DB: stock_alerts
+      POSTGRES_USER: stock_alerts_user
+      POSTGRES_PASSWORD: db1234
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: always
+
