@@ -1,7 +1,7 @@
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated,AllowAny
 from drf_spectacular.utils import extend_schema, OpenApiResponse
 from rest_framework.parsers import JSONParser, MultiPartParser, FormParser
 from django.utils.translation import gettext_lazy as _
@@ -32,6 +32,13 @@ class StockViewSet(viewsets.ModelViewSet):
 
         queryset = Stock.objects.all()
         return queryset
+    
+    def get_permissions(self):
+        if self.action in ['list', 'retrieve']:
+          permission_classes = [AllowAny]
+        else:
+            permission_classes = [IsAuthenticated]
+        return [permission() for permission in permission_classes]
 
     def get_serializer_class(self):
        
