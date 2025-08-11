@@ -68,7 +68,7 @@ class StockViewSet(viewsets.ModelViewSet):
     @action(
         detail=False, 
         methods=['post'],
-        permission_classes=[IsAuthenticated],
+        permission_classes=[AllowAny],
         parser_classes=[JSONParser, MultiPartParser, FormParser]
     )
     def refresh_prices(self, request):
