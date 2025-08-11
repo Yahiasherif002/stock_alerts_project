@@ -34,7 +34,7 @@ class StockViewSet(viewsets.ModelViewSet):
         return queryset
     
     def get_permissions(self):
-        if self.action in ['list', 'retrieve']:
+        if self.action in ['list', 'retrieve','refresh_prices']:
           permission_classes = [AllowAny]
         else:
             permission_classes = [IsAuthenticated]
