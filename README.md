@@ -269,7 +269,98 @@ The system is designed for easy deployment on AWS Free Tier:
 4. Set up Systemd services for Django, Celery  
 5. Configure domain and SSL (optional)  
 
-See AWS Deployment Guide for detailed instructions.
+### AWS EC2 Deployment Guide
+
+
+### 📋 Prerequisites
+
+- AWS Account with billing set up
+- SSH key pair (.pem file) downloaded
+- API keys for:
+  - [Twelve Data](https://twelvedata.com) (Primary stock API)
+  - [Financial Modeling Prep](https://financialmodelingprep.com) (Backup API)
+  - Gmail app password (for email notifications)
+
+---
+
+## 🏗️ AWS EC2 Setup
+
+### 1. Launch EC2 Instance
+
+1. **Go to AWS Console** → EC2 → Launch Instance
+2. **Instance Configuration:**
+   - **Name:** `stock-alerts-server`
+   - **AMI:** Ubuntu Server 22.04 LTS (Free tier eligible)
+   - **Instance Type:** `t2.small` (recommended) or `t2.micro` (free tier)
+   - **Key Pair:** Create new or use existing
+   - **Storage:** 20-30GB gp3
+
+3. **Security Group Rules:**
+   ```
+   Type        Port    Source      Description
+   SSH         22      Your IP     SSH access
+   HTTP        80      0.0.0.0/0   Web traffic
+   HTTPS       443     0.0.0.0/0   Secure web traffic
+   ```
+
+4. **Launch Instance** and note your public IP address
+
+### 2. Connect to Instance
+
+```bash
+# Set permissions for your key file
+chmod 400 your-key.pem
+
+# Connect to your instance
+ssh -i "your-key.pem" ubuntu@YOUR_EC2_PUBLIC_IP
+```
+
+---
+
+## 🐳 Docker Environment Setup
+
+### 1. Install Docker & Dependencies
+
+```bash
+# Update system
+sudo apt update && sudo apt upgrade -y
+
+# Install essential packages
+sudo apt install -y curl wget git htop nginx certbot python3-certbot-nginx
+
+# Install Docker
+curl -fsSL https://get.docker.com -o get-docker.sh
+sudo sh get-docker.sh
+
+# Add user to docker group
+sudo usermod -aG docker ubuntu
+
+# Install Docker Compose
+sudo curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+sudo chmod +x /usr/local/bin/docker-compose
+
+# Start Docker service
+sudo systemctl start docker
+sudo systemctl enable docker
+
+# Log out and back in for group changes to take effect
+exit
+```
+
+### 2. Verify Installation
+
+```bash
+# Reconnect to your instance
+ssh -i "your-key.pem" ubuntu@YOUR_EC2_PUBLIC_IP
+
+# Verify Docker installation
+docker --version
+docker-compose --version
+docker run hello-world
+```
+
+
+
 
 ## 📊 Sample Data
 
