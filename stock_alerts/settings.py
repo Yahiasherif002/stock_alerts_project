@@ -68,6 +68,7 @@ INSTALLED_APPS = [
     'apps.notifications',
     'drf_spectacular',
     'django.contrib.humanize',
+    'django_filters',
 
 ]
 

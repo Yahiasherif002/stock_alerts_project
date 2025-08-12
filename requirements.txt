@@ -8,7 +8,7 @@ redis==5.0.1
 django-cors-headers==4.3.1
 django-environ
 drf-spectacular
-django-filter==23.2.0
+django-filter
 pytest
 pytest-django
 pytz
