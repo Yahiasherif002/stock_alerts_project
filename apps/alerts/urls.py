@@ -5,7 +5,7 @@ from .views import AlertViewSet, TriggeredAlertViewSet
 app_name = "alerts"
 
 router = DefaultRouter()
-router.register("alerts", AlertViewSet, basename="alert")
+router.register("", AlertViewSet, basename="alert")
 router.register("triggered", TriggeredAlertViewSet, basename="triggeredalert")
 
 urlpatterns = router.urls
